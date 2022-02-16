@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.codepath.apps.restclienttemplate.interfaces.RequestCompleteCallback;
-import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.TweetData;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -28,7 +28,7 @@ public class TimelineActivity extends AppCompatActivity {
     private static final int REFRESH_TIMELINE_COUNT = 50;
     private static final int TAIL_TIMELINE_COUNT = 25;
 
-    List<Tweet> tweets;
+    List<TweetData> tweetData;
     TweetsAdapter adapter;
     TwitterClient client;
     RecyclerView rvTweets;
@@ -42,11 +42,11 @@ public class TimelineActivity extends AppCompatActivity {
         rvTweets = findViewById(R.id.rvTweets);
         swipeRefreshContainer = findViewById(R.id.swipeRefreshContainer);
 
-        tweets = new ArrayList<>(INIT_TIMELINE_COUNT);
+        tweetData = new ArrayList<>(INIT_TIMELINE_COUNT);
 
         client = TwitterApp.getRestClient(this);
 
-        adapter = new TweetsAdapter(this, tweets);
+        adapter = new TweetsAdapter(this, tweetData);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rvTweets.setLayoutManager(linearLayoutManager);
         rvTweets.setAdapter(adapter);
@@ -76,7 +76,7 @@ public class TimelineActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 JSONArray timelineArray = json.jsonArray;
                 try {
-                    adapter.insertTweetsInFront(Tweet.fromJSONArray(timelineArray));
+                    adapter.insertTweetsInFront(TweetData.fromJSONArray(timelineArray));
                     swipeRefreshContainer.setRefreshing(false);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -96,7 +96,7 @@ public class TimelineActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 JSONArray timelineArray = json.jsonArray;
                 try {
-                    adapter.insertTweetsInFront(Tweet.fromJSONArray(timelineArray));
+                    adapter.insertTweetsInFront(TweetData.fromJSONArray(timelineArray));
                     swipeRefreshContainer.setRefreshing(false);
                     rvTweets.post(new Runnable() {
                         @Override
@@ -113,7 +113,7 @@ public class TimelineActivity extends AppCompatActivity {
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.e(TAG, "onFailure: " + response, throwable);
             }
-        }, tweets.get(0).id, REFRESH_TIMELINE_COUNT);
+        }, tweetData.get(0).id, REFRESH_TIMELINE_COUNT);
     }
 
     private void getMoreHomeTimeline(RequestCompleteCallback callback) {
@@ -122,7 +122,7 @@ public class TimelineActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 JSONArray timelineArray = json.jsonArray;
                 try {
-                    adapter.insertTweetsInBack(Tweet.fromJSONArray(timelineArray));
+                    adapter.insertTweetsInBack(TweetData.fromJSONArray(timelineArray));
                     callback.requestComplete(true);
                     Log.i("onScrolled", "onSuccess: More Items Loaded");
                 } catch (JSONException e) {
@@ -136,6 +136,6 @@ public class TimelineActivity extends AppCompatActivity {
                 Log.e(TAG, "onFailure: " + response, throwable);
                 callback.requestComplete(false);
             }
-        }, tweets.get(tweets.size() - 1).id, TAIL_TIMELINE_COUNT);
+        }, tweetData.get(tweetData.size() - 1).id, TAIL_TIMELINE_COUNT);
     }
 }

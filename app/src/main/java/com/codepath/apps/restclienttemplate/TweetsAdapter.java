@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.apps.restclienttemplate.databinding.ItemTweetBinding;
-import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.TweetData;
 import com.codepath.apps.restclienttemplate.utils.TweetActionHelper;
 
 import org.parceler.Parcels;
@@ -24,11 +24,11 @@ import java.util.List;
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.TweetViewHolder> {
 
     Context context;
-    List<Tweet> tweets;
+    List<TweetData> tweetData;
 
-    public TweetsAdapter(Context context, List<Tweet> tweets) {
+    public TweetsAdapter(Context context, List<TweetData> tweetData) {
         this.context = context;
-        this.tweets = tweets;
+        this.tweetData = tweetData;
     }
 
     @NonNull
@@ -40,30 +40,30 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.TweetViewH
 
     @Override
     public void onBindViewHolder(@NonNull TweetViewHolder holder, int position) {
-        Tweet tweetData = tweets.get(position);
+        TweetData tweetData = this.tweetData.get(position);
         holder.bind(tweetData);
     }
 
     @Override
     public int getItemCount() {
-        return tweets.size();
+        return tweetData.size();
     }
 
     public void clear() {
-        int sizeBeforeClear = tweets.size();
-        tweets.clear();
+        int sizeBeforeClear = tweetData.size();
+        tweetData.clear();
         notifyItemRangeRemoved(0, sizeBeforeClear);
     }
 
-    public void insertTweetsInFront(List<Tweet> tweetList) {
-        tweets.addAll(0, tweetList);
-        notifyItemRangeInserted(0, tweetList.size());
+    public void insertTweetsInFront(List<TweetData> tweetDataList) {
+        tweetData.addAll(0, tweetDataList);
+        notifyItemRangeInserted(0, tweetDataList.size());
     }
 
-    public void insertTweetsInBack(List<Tweet> tweetList) {
-        int lastIndex = tweets.size();
-        tweets.addAll(tweetList);
-        notifyItemRangeInserted(lastIndex, tweetList.size());
+    public void insertTweetsInBack(List<TweetData> tweetDataList) {
+        int lastIndex = tweetData.size();
+        tweetData.addAll(tweetDataList);
+        notifyItemRangeInserted(lastIndex, tweetDataList.size());
     }
 
     public class TweetViewHolder extends RecyclerView.ViewHolder {
@@ -75,12 +75,12 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.TweetViewH
             binding = DataBindingUtil.bind(itemView);
         }
 
-        public void bind(Tweet tweet) {
-            binding.setTweet(tweet);
+        public void bind(TweetData tweetData) {
+            binding.setTweetData(tweetData);
 
 
             Glide.with(context)
-                    .load(tweet.user.profileImageUrl)
+                    .load(tweetData.userData.profileImageUrl)
                     .apply(RequestOptions.circleCropTransform())
                     .into(binding.ivProfileImage);
 
@@ -88,15 +88,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.TweetViewH
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(context, DetailedTweetActivity.class);
-                    i.putExtra("TweetData", Parcels.wrap(tweet));
+                    i.putExtra("TweetData", Parcels.wrap(tweetData));
                     context.startActivity(i);
                 }
             });
 
 
-            TweetActionHelper.bindLike(binding, binding.ivLikeButton, tweet);
-            TweetActionHelper.bindRetweet(binding, binding.ivRetweetButton, tweet);
-            TweetActionHelper.bindReply(binding, binding.ivReplyButton, tweet);
+            TweetActionHelper.bindLike(binding, binding.ivLikeButton, tweetData);
+            TweetActionHelper.bindRetweet(binding, binding.ivRetweetButton, tweetData);
+            TweetActionHelper.bindReply(binding, binding.ivReplyButton, tweetData);
         }
     }
 }

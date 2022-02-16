@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <variable name="tweet" type="com.codepath.apps.restclienttemplate.models.Tweet" />
+        <variable name="tweetData" type="com.codepath.apps.restclienttemplate.models.TweetData" />
     </data>
     <ScrollView
         android:layout_width="match_parent"
@@ -58,7 +58,7 @@
                         android:layout_height="20dp"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:text="@{tweet.user.name}"
+                        android:text="@{tweetData.userData.name}"
                         android:textColor="@color/name_text"
 
                         tools:text="Radical Name" />
@@ -71,7 +71,7 @@
                         android:layout_toEndOf="@+id/tvName"
                         android:ellipsize="middle"
                         android:singleLine="true"
-                        android:text='@{tweet.customAtString}'
+                        android:text='@{tweetData.customAtString}'
                         android:textColor="@color/screen_name_text"
 
                         tools:text="Radical Username" />
@@ -91,7 +91,7 @@
                         android:layout_height="wrap_content"
                         android:autoLink="all"
                         android:linksClickable="true"
-                        android:text="@{tweet.body}"
+                        android:text="@{tweetData.body}"
 
                         tools:text="Radical Tweet about Radical things happening at Radical place." />
                 </FrameLayout>
@@ -122,7 +122,7 @@
 
                     <ImageView
                         android:id="@+id/ivReplyButton"
-                        is_selected="@{tweet.replied}"
+                        is_selected="@{tweetData.replied}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="33.3"
@@ -130,7 +130,7 @@
 
                     <ImageView
                         android:id="@+id/ivRetweetButton"
-                        is_selected="@{tweet.retweeted}"
+                        is_selected="@{tweetData.retweeted}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="33.3"
@@ -138,7 +138,7 @@
 
                     <ImageView
                         android:id="@+id/ivLikeButton"
-                        is_selected="@{tweet.liked}"
+                        is_selected="@{tweetData.liked}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="33.3"

@@ -1,6 +1,6 @@
 package com.codepath.apps.restclienttemplate;
 
-import static com.codepath.apps.restclienttemplate.models.Media.FAILED_MEDIA;
+import static com.codepath.apps.restclienttemplate.models.MediaData.FAILED_MEDIA_DATA;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,34 +15,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.apps.restclienttemplate.databinding.ActivityDetailedTweetBinding;
-import com.codepath.apps.restclienttemplate.models.Entities;
-import com.codepath.apps.restclienttemplate.models.Media;
-import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.media.MediaType;
+import com.codepath.apps.restclienttemplate.models.EntitiesData;
+import com.codepath.apps.restclienttemplate.models.MediaData;
+import com.codepath.apps.restclienttemplate.media.MediaFactory;
+import com.codepath.apps.restclienttemplate.models.TweetData;
 import com.codepath.apps.restclienttemplate.utils.MeasurementConverter;
 import com.codepath.apps.restclienttemplate.utils.TweetActionHelper;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.ui.PlayerView;
 
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class DetailedTweetActivity extends AppCompatActivity {
     ActivityDetailedTweetBinding binding;
     Toolbar toolbar;
-    Tweet tweetData;
-
-    ArrayList<ExoPlayer> videoRefHolder = new ArrayList<>(1);
+    TweetData tweetData;
 
 
     private void setupToolBar() {
@@ -64,14 +56,14 @@ public class DetailedTweetActivity extends AppCompatActivity {
         setupToolBar();
 
         tweetData = Parcels.unwrap(getIntent().getParcelableExtra("TweetData"));
-        binding.setTweet(tweetData);
+        binding.setTweetData(tweetData);
 
         TweetActionHelper.bindLike(binding, binding.ivLikeButton, tweetData);
         TweetActionHelper.bindRetweet(binding, binding.ivRetweetButton, tweetData);
         TweetActionHelper.bindReply(binding, binding.ivReplyButton, tweetData);
 
         Glide.with(this)
-                .load(tweetData.user.profileImageUrl)
+                .load(tweetData.userData.profileImageUrl)
                 .apply(RequestOptions.circleCropTransform())
                 .into(binding.ivProfileImage);
 
@@ -85,18 +77,18 @@ public class DetailedTweetActivity extends AppCompatActivity {
 
     public void handleEntities() {
         GridLayout mediaGrid = binding.mediaGrid;
-        Entities entities = tweetData.entities;
-        List<Media> mediaList;
-        if (entities != null && entities.allMediaList != null) {
-            mediaList = entities.allMediaList;
+        EntitiesData entities = tweetData.entitiesData;
+        List<MediaData> mediaDataList;
+        if (entities != null && entities.allMediaDataList != null) {
+            mediaDataList = entities.allMediaDataList;
 
             int failedMediaCount = 0;
-            for (Media media: mediaList) failedMediaCount += (media == FAILED_MEDIA)? 1 : 0;
+            for (MediaData mediaData : mediaDataList) failedMediaCount += (mediaData == FAILED_MEDIA_DATA)? 1 : 0;
 
             int widthSize = mediaGrid.getWidth();
             int interPadding = MeasurementConverter.dpToPx(this, 1);
 
-            int displayListSize = mediaList.size() - failedMediaCount;
+            int displayListSize = mediaDataList.size() - failedMediaCount;
             if (displayListSize != 0) binding.mediaGrid.setVisibility(View.VISIBLE);
 
             if (displayListSize == 1) {
@@ -114,87 +106,16 @@ public class DetailedTweetActivity extends AppCompatActivity {
                 widthSize/=2;
             }
 
-            for (Media media : mediaList) {
-                switch (media.mediaType) {
-                    case PHOTO:
-                        ImageView iv = new ImageView(this);
-                        iv.setPadding(interPadding, interPadding, interPadding, interPadding);
-                        iv.setLayoutParams(new ViewGroup.LayoutParams(
-                                widthSize,
-                                (int)(((float)media.ratio[1])/media.ratio[0] * widthSize))
-                        );
-                        Glide.with(this)
-                                .load(media.mediaUrl)
-                                .fitCenter()
-                                .transform(new RoundedCornersTransformation(15, 0))
-                                .into(iv);
-                        mediaGrid.addView(iv);
-                        break;
-                    case ANIMATED_GIF:
-                    case VIDEO:
-                        PlayerView pv = new PlayerView(this);
-                        pv.setLayoutParams(new ViewGroup.LayoutParams(
-                                widthSize,
-                                (int)(((float)media.ratio[1])/media.ratio[0] * widthSize)
-                        ));
-                        ExoPlayer player = new ExoPlayer.Builder(this).build();
-                        player.setMediaItem(MediaItem.fromUri(media.mediaUrl));
-                        player.addListener(new Player.Listener() {
-                            @Override
-                            public void onPlaybackStateChanged(int playbackState) {
-                                if (playbackState == ExoPlayer.STATE_ENDED) player.seekTo(0);
-                            }
-                        });
-                        pv.setPlayer(player);
-                        pv.setUseController(media.mediaType == Media.MEDIA_TYPE.VIDEO);
-                        if (media.mediaType == Media.MEDIA_TYPE.VIDEO) {
-                            pv.setShowPreviousButton(false);
-                            pv.setShowNextButton(false);
-                            pv.setShowFastForwardButton(false);
-                            pv.setShowRewindButton(false);
-                            pv.hideController();
-                        }
-                        player.setPlayWhenReady(true);
-                        player.prepare();
-                        mediaGrid.addView(pv);
-                        videoRefHolder.add(player);
-                        break;
-                    case NOT_SUPPORTED:
-                        break;
-                }
+            for (MediaData mediaData : mediaDataList) {
+                if (mediaData.mediaType == MediaType.NOT_SUPPORTED) continue;
+                View mediaView = MediaFactory.createMedia(mediaData.mediaType).createView(this, mediaData);
+                mediaView.setPadding(interPadding, interPadding, interPadding, interPadding);
+                mediaView.setLayoutParams(new ViewGroup.LayoutParams(
+                        widthSize,
+                        (int)(((float) mediaData.ratio[1])/ mediaData.ratio[0] * widthSize))
+                );
+                mediaGrid.addView(mediaView);
             }
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        for (ExoPlayer player: videoRefHolder) {
-            player.play();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        for (ExoPlayer player : videoRefHolder) {
-            player.pause();
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        for (ExoPlayer player: videoRefHolder) {
-            player.pause();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        for (ExoPlayer player: videoRefHolder) {
-            player.release();
         }
     }
 

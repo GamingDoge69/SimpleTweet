@@ -15,41 +15,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Parcel
-public class Tweet {
+public class TweetData {
     public String id;
     public String body;
     public String createdAt;
-    public User user;
-    public Entities entities;
+    public UserData userData;
+    public EntitiesData entitiesData;
 
     public boolean[] actions = new boolean[3];
     public int LIKE_BUTTON = 0;
     public int RETWEET_BUTTON = 1;
     public int REPLY_BUTTON = 2;
 
-    public Tweet() { /* Parsable Library Constructor */}
+    public TweetData() { /* Parsable Library Constructor */}
 
-    public static Tweet fromJSON(JSONObject jsonObject) throws JSONException {
-        Tweet tweet = new Tweet();
-        tweet.id = jsonObject.getString("id_str");
-        tweet.body = jsonObject.getString("full_text");
-        tweet.createdAt = jsonObject.getString("created_at");
-        tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
-        tweet.actions[tweet.LIKE_BUTTON] = jsonObject.getBoolean("favorited");
-        tweet.actions[tweet.RETWEET_BUTTON] = jsonObject.getBoolean("retweeted");;
-        tweet.actions[tweet.REPLY_BUTTON] = false;
+    public static TweetData fromJSON(JSONObject jsonObject) throws JSONException {
+        TweetData tweetData = new TweetData();
+        tweetData.id = jsonObject.getString("id_str");
+        tweetData.body = jsonObject.getString("full_text");
+        tweetData.createdAt = jsonObject.getString("created_at");
+        tweetData.userData = UserData.fromJSON(jsonObject.getJSONObject("user"));
+        tweetData.actions[tweetData.LIKE_BUTTON] = jsonObject.getBoolean("favorited");
+        tweetData.actions[tweetData.RETWEET_BUTTON] = jsonObject.getBoolean("retweeted");;
+        tweetData.actions[tweetData.REPLY_BUTTON] = false;
         try {
-            tweet.entities = Entities.fromJSON(jsonObject.getJSONObject("extended_entities"));
+            tweetData.entitiesData = EntitiesData.fromJSON(jsonObject.getJSONObject("extended_entities"));
         } catch (JSONException ignored) { }
-        return tweet;
+        return tweetData;
     }
 
-    public static List<Tweet> fromJSONArray(JSONArray jsonArray) throws JSONException {
-        List<Tweet> tweets = new ArrayList<>(jsonArray.length());
+    public static List<TweetData> fromJSONArray(JSONArray jsonArray) throws JSONException {
+        List<TweetData> tweetData = new ArrayList<>(jsonArray.length());
         for (int i = 0; i < jsonArray.length(); i++) {
-            tweets.add(fromJSON(jsonArray.getJSONObject(i)));
+            tweetData.add(fromJSON(jsonArray.getJSONObject(i)));
         }
-        return tweets;
+        return tweetData;
     }
 
     @BindingAdapter("is_selected")
@@ -76,10 +76,10 @@ public class Tweet {
     }
 
     public String getCustomAtString() {
-        return "@" + user.getScreenName() + " · " + getCreatedAt();
+        return "@" + userData.getScreenName() + " · " + getCreatedAt();
     }
 
-    public User getUser() {
-        return user;
+    public UserData getUser() {
+        return userData;
     }
 }

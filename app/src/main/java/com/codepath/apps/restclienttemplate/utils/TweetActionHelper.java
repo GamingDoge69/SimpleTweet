@@ -5,10 +5,10 @@ import android.widget.ImageView;
 
 import androidx.databinding.ViewDataBinding;
 
-import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.TweetData;
 
 public class TweetActionHelper {
-    public static void bindLike(ViewDataBinding binding, ImageView iv, Tweet tweetData) {
+    public static void bindLike(ViewDataBinding binding, ImageView iv, TweetData tweetData) {
         iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -23,7 +23,7 @@ public class TweetActionHelper {
         });
     }
 
-    public static void bindRetweet(ViewDataBinding binding, ImageView iv, Tweet tweetData) {
+    public static void bindRetweet(ViewDataBinding binding, ImageView iv, TweetData tweetData) {
         iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -38,7 +38,7 @@ public class TweetActionHelper {
         });
     }
 
-    public static void bindReply(ViewDataBinding binding, ImageView iv, Tweet tweetData) {
+    public static void bindReply(ViewDataBinding binding, ImageView iv, TweetData tweetData) {
         iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
