@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tool="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable name="tweetData" type="com.codepath.apps.restclienttemplate.models.TweetData" />
+    </data>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="16dp"
+        tools:context=".ComposeFragment">
+
+        <RelativeLayout
+            android:id="@+id/rlTweetDataHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/medium_gray_30"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/ivReplyIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/reply_vector" />
+
+            <TextView
+                android:id="@+id/tvReplyToHintText"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginStart="4dp"
+                android:layout_toEndOf="@id/ivReplyIcon"
+                android:text="@string/tweet_you_re_replying_to_hint" />
+
+            <ImageView
+                android:id="@+id/ivProfileImage"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_below="@id/tvReplyToHintText"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_alignTop="@id/ivProfileImage"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@id/ivProfileImage"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="@{tweetData.userData.name}"
+                android:textColor="@color/name_text"
+
+                tools:text="Radical Name" />
+
+            <com.codepath.apps.restclienttemplate.Views.LinkifiedTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ivProfileImage"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+
+                android:autoLink="all"
+                android:linksClickable="true"
+                android:text="@{tweetData.body}"
+
+                tools:text="Radical Tweet about Radical things happening at Radical place." />
+
+        </RelativeLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/etComposeInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rlTweetDataHolder"
+            android:layout_marginTop="8dp">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/etCompose"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:hint="@string/ComposeTweetEditTextHint"
+                android:minLines="5" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/twitter_blue"
+            android:id="@+id/btnTweet"
+            android:text="@string/tweetButtonText"
+            android:textColor="@color/white"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/etComposeInputLayout"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            />
+
+    </RelativeLayout>
+</layout>

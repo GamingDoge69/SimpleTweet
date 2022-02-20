@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
 
+import com.codepath.apps.restclienttemplate.models.TweetData;
 import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.codepath.oauth.OAuthBaseClient;
@@ -63,5 +64,43 @@ public class TwitterClient extends OAuthBaseClient {
 		if (!since_id.equals("-1")) params.put("since_id", since_id);
 		if (!max_id.equals("-1")) params.put("max_id", max_id);
 		client.get(apiUrl, params, handler);
+	}
+
+	public void postTweet(JsonHttpResponseHandler handler, String tweetContent) {
+		String apiUrl = getApiUrl("statuses/update.json");
+		RequestParams params = new RequestParams();
+		params.put("tweet_mode", "extended");
+		params.put("status", tweetContent);
+		client.post(apiUrl, params, "", handler);
+	}
+
+	public void postLike(JsonHttpResponseHandler handler, TweetData tweetData) {
+		String apiUrl = tweetData.actions[tweetData.LIKE_BUTTON]?
+				getApiUrl("favorites/create.json") :
+				getApiUrl("favorites/destroy.json");
+		RequestParams params = new RequestParams();
+		params.put("id", tweetData.id);
+		params.put("include_entities", false);
+		params.put("tweet_mode", "extended");
+		client.post(apiUrl, params, "", handler);
+	}
+
+	public void postRetweet(JsonHttpResponseHandler handler, TweetData tweetData) {
+		String apiUrl = String.format( (tweetData.actions[tweetData.RETWEET_BUTTON])?
+				getApiUrl("statuses/retweet/%s.json") :
+				getApiUrl("statuses/unretweet/%s.json"), tweetData.id);
+		RequestParams params = new RequestParams();
+		params.put("include_entities", false);
+		params.put("tweet_mode", "extended");
+		client.post(apiUrl, params, "", handler);
+	}
+
+	public void postReply(JsonHttpResponseHandler handler, String tweetContent, TweetData tweetData) {
+		String apiUrl = getApiUrl("statuses/update.json");
+		RequestParams params = new RequestParams();
+		params.put("tweet_mode", "extended");
+		params.put("in_reply_to_status_id", tweetData.id);
+		params.put("status", tweetContent);
+		client.post(apiUrl, params, "", handler);
 	}
 }

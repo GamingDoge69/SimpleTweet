@@ -5,5 +5,14 @@
     <string name="login_label">Log in</string>
     <string name="intent_scheme">oauth</string>
     <string name="intent_host">cprest</string>
+    <string name="compose">Compose</string>
+    <string name="ComposeTweetEditTextHint">What\'s happening?</string>
+    <string name="tweetButtonText">Tweet</string>
+    <string name="emptyTweetToastWarning">Tweet is Empty</string>
+    <string name="longTweetToastWarning">Tweet is to long, max 280 characters</string>
+    <string name="tweetPostFailedToastWarning">Tweet Failed To Post, Try Again!</string>
+    <string name="tweet_you_re_replying_to_hint">Tweet You\'re Replying To</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

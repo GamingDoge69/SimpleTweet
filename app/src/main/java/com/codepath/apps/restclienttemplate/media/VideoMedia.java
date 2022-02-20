@@ -22,6 +22,7 @@ public class VideoMedia implements Media {
 
         MediaController mediaController = new MediaController(context);
         vv.setMediaController(mediaController);
+        mediaController.setAnchorView(vv);
 
         vv.start();
         return vv;

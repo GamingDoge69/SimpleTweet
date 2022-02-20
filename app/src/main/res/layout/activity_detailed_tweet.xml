@@ -116,33 +116,52 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/mediaGrid"
-                    android:layout_marginTop="8dp"
                     android:layout_marginHorizontal="16dp"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:layout_toEndOf="@id/ivProfileImage">
 
                     <ImageView
                         android:id="@+id/ivReplyButton"
-                        is_selected="@{tweetData.replied}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="33.3"
+                        android:layout_weight="1"
                         app:srcCompat="@drawable/reply_vector" />
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2" />
 
                     <ImageView
                         android:id="@+id/ivRetweetButton"
                         is_selected="@{tweetData.retweeted}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="33.3"
+                        android:layout_weight="0.5"
                         app:srcCompat="@drawable/retweet_vector" />
+
+                    <TextView
+                        android:id="@+id/tvRetweetCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="24dp"
+                        android:layout_weight="2.5"
+                        android:text="@{String.valueOf(tweetData.retweetCount)}" />
 
                     <ImageView
                         android:id="@+id/ivLikeButton"
                         is_selected="@{tweetData.liked}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="33.3"
+                        android:layout_weight="0.5"
                         app:srcCompat="@drawable/like_vector" />
+
+                    <TextView
+                        android:id="@+id/tvLikeCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="24dp"
+                        android:layout_weight="2.5"
+                        android:text="@{String.valueOf(tweetData.likeCount)}" />
 
 
                 </LinearLayout>

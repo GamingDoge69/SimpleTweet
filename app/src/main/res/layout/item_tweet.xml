@@ -74,49 +74,78 @@
                 />
         </FrameLayout>
 
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:rowCount="2"
+            android:columnCount="2"
+            android:id="@+id/mediaGrid"
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:layout_below="@+id/tvBodyHolder"
+            android:layout_toEndOf="@+id/ivProfileImage"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:id="@+id/linearLayoutsForButtons"
-            android:layout_below="@id/tvBodyHolder"
+            android:layout_below="@id/mediaGrid"
+            android:layout_toEndOf="@id/ivProfileImage"
             android:layout_marginTop="8dp"
             >
             <ImageView
+                android:id="@+id/ivReplyButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="33.3"
-                android:id="@+id/ivReplyButton"
-                is_selected="@{tweetData.replied}"
-                app:srcCompat="@drawable/reply_vector"
-                />
+                android:layout_weight="1"
+                app:srcCompat="@drawable/reply_vector" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="33.3"
                 android:id="@+id/ivRetweetButton"
                 is_selected="@{tweetData.retweeted}"
-                app:srcCompat="@drawable/retweet_vector"
-                />
-            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="33.3"
+                android:layout_weight="0.5"
+                app:srcCompat="@drawable/retweet_vector" />
+
+            <TextView
+                android:id="@+id/tvRetweetCount"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_weight="2.5"
+                android:text="@{String.valueOf(tweetData.retweetCount)}" />
+
+            <ImageView
                 android:id="@+id/ivLikeButton"
                 is_selected="@{tweetData.liked}"
-                app:srcCompat="@drawable/like_vector"
-                />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                app:srcCompat="@drawable/like_vector" />
 
-
+            <TextView
+                android:id="@+id/tvLikeCount"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_weight="2.5"
+                android:text="@{String.valueOf(tweetData.likeCount)}" />
         </LinearLayout>
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:src="@color/medium_gray"
             android:layout_below="@id/linearLayoutsForButtons"
             android:layout_marginTop="16dp"
-            />
+            android:src="@color/medium_gray" />
     </RelativeLayout>
 </layout>

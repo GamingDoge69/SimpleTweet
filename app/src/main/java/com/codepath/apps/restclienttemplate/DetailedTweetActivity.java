@@ -1,6 +1,5 @@
 package com.codepath.apps.restclienttemplate;
 
-import static com.codepath.apps.restclienttemplate.models.MediaData.FAILED_MEDIA_DATA;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,33 +7,28 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.GridLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.apps.restclienttemplate.databinding.ActivityDetailedTweetBinding;
-import com.codepath.apps.restclienttemplate.media.MediaType;
-import com.codepath.apps.restclienttemplate.models.EntitiesData;
-import com.codepath.apps.restclienttemplate.models.MediaData;
-import com.codepath.apps.restclienttemplate.media.MediaFactory;
+import com.codepath.apps.restclienttemplate.utils.EntitiesHelper;
 import com.codepath.apps.restclienttemplate.models.TweetData;
-import com.codepath.apps.restclienttemplate.utils.MeasurementConverter;
 import com.codepath.apps.restclienttemplate.utils.TweetActionHelper;
 
 import org.parceler.Parcels;
 
-import java.util.List;
 
 public class DetailedTweetActivity extends AppCompatActivity {
     ActivityDetailedTweetBinding binding;
     Toolbar toolbar;
     TweetData tweetData;
+    TwitterClient client;
 
 
     private void setupToolBar() {
@@ -55,12 +49,14 @@ public class DetailedTweetActivity extends AppCompatActivity {
 
         setupToolBar();
 
-        tweetData = Parcels.unwrap(getIntent().getParcelableExtra("TweetData"));
+        client = TwitterApp.getRestClient(this);
+
+        tweetData = Parcels.unwrap(getIntent().getParcelableExtra("tweetData"));
         binding.setTweetData(tweetData);
 
-        TweetActionHelper.bindLike(binding, binding.ivLikeButton, tweetData);
-        TweetActionHelper.bindRetweet(binding, binding.ivRetweetButton, tweetData);
-        TweetActionHelper.bindReply(binding, binding.ivReplyButton, tweetData);
+        TweetActionHelper.bindLike(binding, binding.ivLikeButton, tweetData, client);
+        TweetActionHelper.bindRetweet(binding, binding.ivRetweetButton, tweetData, client);
+        TweetActionHelper.bindReply(binding, binding.ivReplyButton, tweetData, getSupportFragmentManager(), TimelineActivity.offlineTweetListener);
 
         Glide.with(this)
                 .load(tweetData.userData.profileImageUrl)
@@ -70,53 +66,9 @@ public class DetailedTweetActivity extends AppCompatActivity {
         binding.mediaGrid.post(new Runnable() {
             @Override
             public void run() {
-                handleEntities();
+                EntitiesHelper.insertEntitiesIntoGrid(DetailedTweetActivity.this, binding.mediaGrid, tweetData);
             }
         });
-    }
-
-    public void handleEntities() {
-        GridLayout mediaGrid = binding.mediaGrid;
-        EntitiesData entities = tweetData.entitiesData;
-        List<MediaData> mediaDataList;
-        if (entities != null && entities.allMediaDataList != null) {
-            mediaDataList = entities.allMediaDataList;
-
-            int failedMediaCount = 0;
-            for (MediaData mediaData : mediaDataList) failedMediaCount += (mediaData == FAILED_MEDIA_DATA)? 1 : 0;
-
-            int widthSize = mediaGrid.getWidth();
-            int interPadding = MeasurementConverter.dpToPx(this, 1);
-
-            int displayListSize = mediaDataList.size() - failedMediaCount;
-            if (displayListSize != 0) binding.mediaGrid.setVisibility(View.VISIBLE);
-
-            if (displayListSize == 1) {
-                mediaGrid.setRowCount(1);
-                mediaGrid.setColumnCount(1);
-            }
-            else if (displayListSize == 2) {
-                mediaGrid.setRowCount(1);
-                mediaGrid.setColumnCount(2);
-                widthSize/=2;
-            }
-            else if (displayListSize - failedMediaCount >= 3) {
-                mediaGrid.setRowCount(2);
-                mediaGrid.setColumnCount(2);
-                widthSize/=2;
-            }
-
-            for (MediaData mediaData : mediaDataList) {
-                if (mediaData.mediaType == MediaType.NOT_SUPPORTED) continue;
-                View mediaView = MediaFactory.createMedia(mediaData.mediaType).createView(this, mediaData);
-                mediaView.setPadding(interPadding, interPadding, interPadding, interPadding);
-                mediaView.setLayoutParams(new ViewGroup.LayoutParams(
-                        widthSize,
-                        (int)(((float) mediaData.ratio[1])/ mediaData.ratio[0] * widthSize))
-                );
-                mediaGrid.addView(mediaView);
-            }
-        }
     }
 
     @Override
@@ -128,5 +80,13 @@ public class DetailedTweetActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent();
+        i.putExtra("tweetData", Parcels.wrap(tweetData));
+        setResult(Activity.RESULT_OK, i);
+        super.onBackPressed();
     }
 }

@@ -35,4 +35,18 @@
             android:layout_height="match_parent"
             android:id="@+id/rvTweets"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:src="@drawable/ic_vector_compose"
+        app:fabSize="normal"
+        android:id="@+id/fabCompose"
+        app:backgroundTint="@color/twitter_blue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+        android:layout_margin="16dp"
+        app:layout_anchor="@id/rvTweets"
+        app:layout_anchorGravity="bottom|right|end"
+        tools:ignore="RtlHardcoded" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
