@@ -23,8 +23,14 @@ public class TweetData {
     public String createdAt;
     public UserData userData;
     public EntitiesData entitiesData;
+
     public long likeCount;
+    private int offlineLike = 0;
+    private boolean DB_LIKE;
+
     public long retweetCount;
+    private int offlineRetweet = 0;
+    private boolean DB_RETWEET;
 
     public boolean[] actions = new boolean[2];
     public int LIKE_BUTTON = 0;
@@ -40,6 +46,8 @@ public class TweetData {
         tweetData.userData = UserData.fromJSON(jsonObject.getJSONObject("user"));
         tweetData.actions[tweetData.LIKE_BUTTON] = jsonObject.getBoolean("favorited");
         tweetData.actions[tweetData.RETWEET_BUTTON] = jsonObject.getBoolean("retweeted");
+        tweetData.DB_LIKE = tweetData.actions[tweetData.LIKE_BUTTON];
+        tweetData.DB_RETWEET = tweetData.actions[tweetData.RETWEET_BUTTON];
         try {
             tweetData.entitiesData = EntitiesData.fromJSON(jsonObject.getJSONObject("extended_entities"));
         } catch (JSONException ignored) { }
@@ -65,12 +73,27 @@ public class TweetData {
 
     public Boolean getRetweeted() { return actions[RETWEET_BUTTON];}
 
+    public void handleOfflineLike() {
+        if (DB_LIKE)
+            offlineLike = this.actions[LIKE_BUTTON]? 0 : -1;
+        else
+            offlineLike = this.actions[LIKE_BUTTON]? 1 : 0;
+    }
     public long getLikeCount() {
-        return likeCount + (actions[LIKE_BUTTON]? 1 : 0);
+        handleOfflineLike();
+        return likeCount + offlineLike;
+    }
+
+    public void handleOfflineRetweet() {
+        if (DB_RETWEET)
+            offlineRetweet = this.actions[RETWEET_BUTTON]? 0 : -1;
+        else
+            offlineRetweet = this.actions[RETWEET_BUTTON]? 1 : 0;
     }
 
     public long getRetweetCount() {
-        return retweetCount + (actions[RETWEET_BUTTON]? 1 : 0);
+        handleOfflineRetweet();
+        return retweetCount + offlineRetweet;
     }
 
     public String getId() {
