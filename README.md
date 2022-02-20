@@ -56,9 +56,8 @@ The following **required** functionality is completed:
 
 The following **optional** features are implemented:
 
-- [x] User can view more tweetData as they scroll with infinite pagination
-- [x] Improve the userData interface and theme the app to feel "twitter branded"
-  - Will do more next week. Prio on features this week.
+- [x] User can view more tweet as they scroll with infinite pagination
+- [x] Improve the user interface and theme the app to feel "twitter branded"
 - [x] Links in tweetData are clickable and will launch the web browser
 - [x] User can tap a tweetData to display a "detailed" view of that tweetData
 - [x] User can see embedded image mediaData within the tweetData detail view
@@ -68,7 +67,7 @@ The following **optional** features are implemented:
 
 ## Video Walkthrough
 
-Here's a walkthrough of implemented userData stories:
+Here's a walkthrough of implemented user stories:
 
 <img src='https://user-images.githubusercontent.com/43687971/153701564-bd028615-ff18-4b9b-be6c-e5a1923a79de.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
@@ -93,7 +92,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 - [Android Async HTTP](https://github.com/codepath/CPAsyncHttpClient) - Simple asynchronous HTTP requests with JSON parsing
 - [Glide](https://github.com/bumptech/glide) - Image loading and caching library for Android
-- [ExoPlayer](https://github.com/google/ExoPlayer) - Application level mediaData player for Android
+- [ExoPlayer](https://github.com/google/ExoPlayer) - Application level media player for Android
 
 ## License
 
