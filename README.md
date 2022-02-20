@@ -38,12 +38,13 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='https://user-images.githubusercontent.com/43687971/154833492-e77b0fd5-6b6c-4d1b-846a-58160eaa103d.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://user-images.githubusercontent.com/43687971/154834348-38559456-0220-4b1f-88cd-af3665ae90ad.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 
 ## User Stories Part 1
+
 Time spent: **15** hours spent in total
 
 The following **required** functionality is completed:
